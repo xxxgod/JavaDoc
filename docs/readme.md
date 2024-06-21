@@ -8,7 +8,7 @@
 对于更多实践教程内容，会放在 [IT趣-Geek社区]( http://bbs.itqu.net/) 
 
 赠人玫瑰，手有余香，感谢捐赠 。                                                 另加微信：（帮拉进群互动，互助内推和分享面经）                                                  
-<img src="https://xxxgod.github.io/javadoc/image/exchange/weixinpay_new.jpg" alt="捐赠" width="300" height="300">  <img src="https://xxxgod.github.io/javadoc/image/exchange/wechat.jpg" alt="微信" width="300" height="440">
+<img src="https://xxxgod.github.io/JavaDoc/image/exchange/weixinpay_new.jpg" alt="捐赠" width="300" height="300">  <img src="https://xxxgod.github.io/JavaDoc/image/exchange/wechat.jpg" alt="微信" width="300" height="440">
 
 
 
