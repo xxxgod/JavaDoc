@@ -1,5 +1,5 @@
 ### 简历  
-可参考模板 [简历](https://xxxgod.gitee.io/javadoc/#/interview/resume-template) 
+可参考模板 [简历](https://xxxgod.github.io/JavaDoc/#/interview/resume-template) 
 
 ### 招聘网站
 [猎聘](https://wow.liepin.com )   [拉钩](https://www.lagou.com/wn)  [脉脉](https://maimai.cn)  [Boss直聘](https://www.zhipin.com)   [智联招聘](https://i.zhaopin.com)  [51job](https://i.51job.com)  
