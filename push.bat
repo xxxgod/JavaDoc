@@ -1,18 +1,19 @@
 @echo off
-::echo --编译vuepress代码
+::echo -- ����
 ::npm run docs:build
 
 
-echo --提交本地仓库
+echo --�ύ
 git add .
 
-set /p con=输入更新日志：
+set /p con=��ע?
 git commit -m "%con%"
 
-echo --Push到远程仓库
+echo --PushԶ�ֿ̲�?
 git push 
 
-echo --更新Page
-start https://gitee.com/xxxgod/javadoc/pages
+echo --����Git Page
+:: start https://gitee.com/xxxgod/javadoc/pages
+start https://github.com/xxxgod/JavaDoc/settings/pages
 
 exit
