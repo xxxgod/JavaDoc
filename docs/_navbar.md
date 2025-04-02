@@ -1,5 +1,5 @@
 <!-- wiki/_sidebar.md -->
-* [首页](/readme)
+* [首页](/README)
 
 * [热门知识](/wiki/hot/)
 
