@@ -9,4 +9,4 @@
 
 > 使用Vue全家桶+Node.js搭建.
 
-[Start](/README)
+[Start](/readme.md)
