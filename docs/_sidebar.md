@@ -58,14 +58,4 @@
    * [Tomcat](/wiki/operation/tomcat)
    * [Docker](/wiki/operation/docker)  
 
-
-<!--
-* 前端知识
-   * [CSS](/wiki/web/css)
-   * [Html](/wiki/web/html)
-   * [Js](/wiki/web/js)
-   * [Jquery](/wiki/web/jquery)
-   * [Ajax](/wiki/web/ajax)
-   * [Vue](/wiki/web/vue)
-   -->
    
