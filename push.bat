@@ -6,10 +6,10 @@
 echo --提交
 git add .
 
-set /p con=备注?
+set /p con=备注：
 git commit -m "%con%"
 
-echo --Push远程仓库?
+echo --Push远程仓库
 git push 
 
 echo --部署Git Page
