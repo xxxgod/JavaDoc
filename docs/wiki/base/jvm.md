@@ -113,11 +113,11 @@ Eden 区、两个 Survivor 区都属于新生代（为了区分，这两个 Surv
 
 **1.堆内存分配策略：**
 
-![对象死亡](https://xxxgod.gitee.io/javadoc/image/jvm/jvm0.png)
+![对象死亡](https://xxxgod.github.io/JavaDoc/image/jvm/jvm0.png)
 
 **2.如何判断对象已经死亡？**
 
-![对象死亡](https://xxxgod.gitee.io/javadoc/image/jvm/jvm1.png)
+![对象死亡](https://xxxgod.github.io/JavaDoc/image/jvm/jvm1.png)
 
 **3.垃圾收集器：**
 
@@ -141,11 +141,11 @@ ZGC 收集器
 
 实战演示从OOM推导出JVM GC时候基于的内存结构：Young Generation（Eden、From、To）、OldGeneration、Permanent Generation
 
-![对象死亡](https://xxxgod.gitee.io/javadoc/image/jvm/jvm3.png)
+![对象死亡](https://xxxgod.github.io/JavaDoc/image/jvm/jvm3.png)
 
 JVMHeap区域(年轻代、老年代)和方法区(永久代)结构图：
 
-![对象死亡](https://xxxgod.gitee.io/javadoc/image/jvm/jvm4.png)
+![对象死亡](https://xxxgod.github.io/JavaDoc/image/jvm/jvm4.png)
 
 从Java GC的角度解读代码：程序20行new的Person对象会首先会进入年轻代的Eden中（如果对象太大可能直接进入年老代）。在GC之前对象是存在Eden和from中的，进行GC的时候Eden中的对象被拷贝到To这样一个survive空间（survive（幸存）空间：包括from和to，他们的空间大小是一样的，又叫s1和s2）中（有一个拷贝算法），From中的对象（算法会考虑经过GC幸存的次数）到一定次数（阈值（如果说每次GC之后这个对象依旧在Survive中存在，GC一次他的Age就会加1，默认15就会放到OldGeneration。但是实际情况比较复杂，有可能没有到阈值就从Survive区域直接到Old Generation区域。在进行GC的时候会对Survive中的对象进行判断，Survive空间中有一些对象Age是一样的，也就是经过的GC次数一样，年龄相同的这样一批对象的总和大于等于Survive空间一半的话，这组对象就会进入old Generation中，（是一种动态的调整））），会被复制到OldGeneration，如果没到次数From中的对象会被复制到To中，复制完成后To中保存的是有效的对象，Eden和From中剩下的都是无效的对象，这个时候就把Eden和From中所有的对象清空。在复制的时候Eden中的对象进入To中，To可能已经满了，这个时候Eden中的对象就会被直接复制到Old Generation中，From中的对象也会直接进入Old Generation中。就是存在这样一种情况，To比较小，第一次复制的时候空间就满了，直接进入old Generation中。复制完成后，To和From的名字会对调一下，因为Eden和From都是空的，对调后Eden和To都是空的，下次分配就会分配到Eden。一直循环这个流程。好处：使用对象最多和效率最高的就是在Young Generation中，通过From to就避免过于频繁的产生FullGC（Old Generation满了一般都会产生FullGC）
 

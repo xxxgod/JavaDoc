@@ -7,33 +7,58 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  
+  </style>
+  
 </head>
 <body>
   <div id="app"></div>
 <script>
     window.$docsify = {
-      name: '导航栏',
-	  loadSidebar: true,
-      repo: 'https://gitee.com/xxxgod/javaDoc',
-      coverpage: true,
-	  alias: {
+	<!-- toc: { -->
+	 <!-- scope: 'h1, h2, h3',  -->
+      <!-- maxDepth: 4, -->
+      <!-- headingLabel: '👉', -->
+      <!-- subMaxLevel: 2, -->
+      <!-- auto2top: true, -->
+      <!-- scrollToTop: true, -->
+      <!-- smoothScroll: true, -->
+	  <!-- title: '目录' -->
+    <!-- }, -->
+    pagination: {
+        previousText: '上一页',
+        nextText: '下一页',
+        crossChapter: true,
+        crossChapterText: true
+    },
+	autoHeader: true,
+    name: 'JavaDoc',
+    repo: 'https://gitee.com/xxxgod/javaDoc',
+    coverpage: false,
+	loadSidebar: true,    // 启用侧边栏
+    subMaxLevel: 3,       // 可选：目录的最大层级
+    auto2top: true, 
+    copyCode: false,
+    // logo: '/path/to/your/logo.png', //导航栏的logo
+	externalLinkTarget: '_blank', //外部链接的打开方式
+	alias: {
+	  
       '/.*/_sidebar.md': '/_sidebar.md'
     },
-	  subMaxLevel: 2,
-      loadNavbar: true, // 加载导航栏
-	  pagination: {
-      previousText: '上一章节',
-      nextText: '下一章节',
-    },
+    loadNavbar: true, // 加载导航栏
     search: {
       paths: 'auto',
       placeholder: '请输入要搜索的关键字',
       noData: '没有结果',
       depth: 6,
     },
-     homepage: 'readme.md'
-		
-	
+    homepage: 'readme.md',
+	count:{
+    countable:true,
+    fontsize:'0.9em',
+    color:'rgb(90,90,90)',
+    language:'chinese'
+  }
 }
   </script>
   
@@ -43,6 +68,12 @@
   <!-- 全局搜索 --> 
   <!-- <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script> -->
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/docsify-toc@1.1.0/dist/toc.min.js"></script> -->
+  <script src="//unpkg.com/docsify-copy-code"></script>
+  <!-- 图片缩放 --> 
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
+<script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+
   
 </body>
 </html>
