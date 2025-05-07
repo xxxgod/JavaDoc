@@ -1,4 +1,12 @@
-[参考资料：JVM垃圾回收](https://snailclimb.gitee.io/javaguide/#/wiki/java/jvm/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6?id=_4-%e5%9e%83%e5%9c%be%e6%94%b6%e9%9b%86%e5%99%a8)
+## 概念
+
+**Java 虚拟机（JVM）**是 Java 程序运行的基础，它就像是一个虚拟的计算机环境，能让 Java 字节码在不同操作系统和硬件上运行，实现 “一次编写，到处运行” 。
+
+从**功能上**看，JVM 的核心能力首先是内存管理，它有自动垃圾回收机制，帮我们处理对象内存的分配和回收，避免内存泄漏等问题；其次，JVM 负责执行字节码，通过解释或编译的方式，将字节码转化为机器码供计算机执行；它还提供了平台无关性，无论我们在 Windows、Linux 还是 Mac 上运行，只要安装了 JVM，字节码就可以正确执行。
+
+在 JVM 的**体系结构**方面，它主要包含类加载器子系统、运行时数据区、执行引三个关键部分。类加载器子系统负责加载字节码文件，采用双亲委派机制，确保类加载的安全和统一；运行时数据区是程序运行时数据存储的地方，包括堆（存对象实例）、栈（记录方法调用）、方法区（存类信息等）、程序计数器（记录指令地址）和本地方法栈；执行引擎负责执行字节码指令，与数据区交互完成操作；本地方法接口则让 Java 程序能调用本地代码，实现与底层系统的交互。
+
+对 Java 开发来说，JVM 的作用非常重要。它屏蔽了底层差异，让我们专注于业务逻辑；安全管理器等机制保障了程序运行安全；即时编译等优化技术，还有垃圾回收对内存的高效管理，都提升了程序性能。
 
 ## **JVM内存结构**
 
@@ -89,6 +97,8 @@ Eden 区、两个 Survivor 区都属于新生代（为了区分，这两个 Surv
 
 > 《Java 虚拟机规范》只是规定了有方法区这么个概念和它的作用，并没有规定如何去实现它。那么，在不同的 JVM 上方法区的实现肯定是不同的了。 **方法区和永久代的关系很像 Java 中接口和类的关系，类实现了接口，而永久代就是 HotSpot 虚拟机对虚拟机规范中方法区的一种实现方式。** 也就是说，永久代是 HotSpot 的概念，方法区是 Java 虚拟机规范中的定义，是一种规范，而永久代是一种实现，一个是标准一个是实现，其他的虚拟机实现并没有永久代这一说法。
 
+
+
 ## 类的加载概述
 
 参考：https://blog.csdn.net/zhaocuit/article/details/93038538
@@ -110,6 +120,8 @@ Eden 区、两个 Survivor 区都属于新生代（为了区分，这两个 Surv
 
 
 ## GC垃圾回收
+
+[参考资料：JVM垃圾回收](https://snailclimb.gitee.io/javaguide/#/wiki/java/jvm/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6?id=_4-%e5%9e%83%e5%9c%be%e6%94%b6%e9%9b%86%e5%99%a8)
 
 **1.堆内存分配策略：**
 
@@ -137,6 +149,8 @@ G1 收集器
 
 ZGC 收集器   
 
+
+
 ## 垃圾回收的过程
 
 实战演示从OOM推导出JVM GC时候基于的内存结构：Young Generation（Eden、From、To）、OldGeneration、Permanent Generation
@@ -147,7 +161,9 @@ JVMHeap区域(年轻代、老年代)和方法区(永久代)结构图：
 
 ![对象死亡](https://xxxgod.github.io/JavaDoc/image/jvm/jvm4.png)
 
-从Java GC的角度解读代码：程序20行new的Person对象会首先会进入年轻代的Eden中（如果对象太大可能直接进入年老代）。在GC之前对象是存在Eden和from中的，进行GC的时候Eden中的对象被拷贝到To这样一个survive空间（survive（幸存）空间：包括from和to，他们的空间大小是一样的，又叫s1和s2）中（有一个拷贝算法），From中的对象（算法会考虑经过GC幸存的次数）到一定次数（阈值（如果说每次GC之后这个对象依旧在Survive中存在，GC一次他的Age就会加1，默认15就会放到OldGeneration。但是实际情况比较复杂，有可能没有到阈值就从Survive区域直接到Old Generation区域。在进行GC的时候会对Survive中的对象进行判断，Survive空间中有一些对象Age是一样的，也就是经过的GC次数一样，年龄相同的这样一批对象的总和大于等于Survive空间一半的话，这组对象就会进入old Generation中，（是一种动态的调整））），会被复制到OldGeneration，如果没到次数From中的对象会被复制到To中，复制完成后To中保存的是有效的对象，Eden和From中剩下的都是无效的对象，这个时候就把Eden和From中所有的对象清空。在复制的时候Eden中的对象进入To中，To可能已经满了，这个时候Eden中的对象就会被直接复制到Old Generation中，From中的对象也会直接进入Old Generation中。就是存在这样一种情况，To比较小，第一次复制的时候空间就满了，直接进入old Generation中。复制完成后，To和From的名字会对调一下，因为Eden和From都是空的，对调后Eden和To都是空的，下次分配就会分配到Eden。一直循环这个流程。好处：使用对象最多和效率最高的就是在Young Generation中，通过From to就避免过于频繁的产生FullGC（Old Generation满了一般都会产生FullGC）
+从Java GC的角度解读代码：程序20行new的Person对象会首先会进入年轻代的Eden中（如果对象太大可能直接进入年老代）。在GC之前对象是存在Eden和from中的，进行GC的时候Eden中的对象被拷贝到To这样一个survive空间（survive（幸存）空间：包括from和to，他们的空间大小是一样的，又叫s1和s2）中（有一个拷贝算法），From中的对象（算法会考虑经过GC幸存的次数）到一定次数（阈值（如果说每次GC之后这个对象依旧在Survive中存在，GC一次他的Age就会加1，默认15就会放到OldGeneration。但是实际情况比较复杂，有可能没有到阈值就从Survive区域直接到Old Generation区域。在进行GC的时候会对Survive中的对象进行判断，Survive空间中有一些对象Age是一样的，也就是经过的GC次数一样，年龄相同的这样一批对象的总和大于等于Survive空间一半的话，这组对象就会进入old Generation中，（是一种动态的调整））），会被复制到OldGeneration，如果没到次数From中的对象会被复制到To中，复制完成后To中保存的是有效的对象，Eden和From中剩下的都是无效的对象，这个时候就把Eden和From中所有的对象清空。在复制的时候Eden中的对象进入To中，To可能已经满了，这个时候Eden中的对象就会被直接复制到Old Generation中，From中的对象也会直接进入Old Generation中。就是存在这样一种情况，To比较小，第一次复制的时候空间就满了，直接进入old Generation中。复制完成后，To和From的名字会对调一下，因为Eden和From都是空的，对调后Eden和To都是空的，下次分配就会分配到Eden。一直循环这个流程。   
+
+好处：使用对象最多和效率最高的就是在Young Generation中，通过From to就避免过于频繁的产生FullGC（Old Generation满了一般都会产生FullGC）
 
 虚拟机在进行MinorGC（新生代的GC）的时候，会判断要进入OldGeneration区域对象的大小，是否大于Old Generation剩余空间大小，如果大于就会发生Full GC。
 
@@ -159,13 +175,13 @@ JVMHeap区域(年轻代、老年代)和方法区(永久代)结构图：
 
 Permanent Generation（永久代）可以理解成方法区，（它属于方法区）也有可能发生GC，例如类的实例对象全部被GC了，同时它的类加载器也被GC掉了，这个时候就会触发永久代中对象的GC。
 
-如果OldGeneration满了就会产生FullGC
+如果OldGeneration满了就会产生FullGC满原因：
 
-满原因：1，from survive中对象的生命周期到一定阈值
+1，from survive中对象的生命周期到一定阈值
 
 2，分配的对象直接是大对象
 
-3、由于To 空间不够，进行GC直接把对象拷贝到年老代（年老代GC时候采用不同的算法）
+3，由于To 空间不够，进行GC直接把对象拷贝到年老代（年老代GC时候采用不同的算法）
 
 如果Young Generation大小分配不合理或空间比较小，这个时候导致对象很容易进入Old Generation中，而Old Generation中回收具体对象的时候速度是远远低于Young Generation回收速度。
 
@@ -191,10 +207,10 @@ Permanent Generation中发生GC的时候也对性能影响非常大，也是Full
 
 3.标记清除法   
 第一次扫描这些对象，用到了就经行标记。第二次扫描对没有标记的对象进行清除。
- 
+
 4.标记压缩法   
 先进行多次的标记清除，然后对其进行压缩。
- 
+
 总结    
 内存效率：复制算法>标记清除算法>标记压缩算法   
 内存整齐度：复制算法=标记压缩算法>标记清除算法   
@@ -219,13 +235,64 @@ GChisto，一款专业分析gc日志的工具
 
 
 #### JVM性能调优   
-设定堆内存大小    
--Xmx：堆内存最大限制。    
-设定新生代大小。 新生代不宜太小，否则会有大量对象涌入老年代    
--XX:NewSize：新生代大小     
--XX:NewRatio 新生代和老生代占比   
--XX:SurvivorRatio：伊甸园空间和幸存者空间的占比  
-设定垃圾回收器 年轻代用 -XX:+UseParNewGC 年老代用-XX:+UseConcMarkSweepGC   
+#### 堆内存相关参数
+
+##### 初始堆大小和最大堆大小
+
+- **参数**：`-Xms`用于设置 JVM 初始堆大小，`-Xmx`用于设置 JVM 最大堆大小。
+- **示例**：`-Xms512m -Xmx512m` 表示将初始堆大小和最大堆大小都设置为 512MB。
+- **作用**：把初始堆大小和最大堆大小设置成相同的值，能够避免堆内存动态扩展带来的性能损耗。
+
+##### 新生代和老年代大小
+
+- **参数**：`-Xmn`用于设置新生代的大小；`-XX:NewRatio`用于设置老年代与新生代的比例。
+- **示例**：`-Xmn256m` 直接将新生代大小设为 256MB；`-XX:NewRatio=2` 表示老年代是新生代的 2 倍，即新生代占堆内存的 1/3。
+- **作用**：合理分配新生代和老年代的大小，能减少垃圾回收的频率，提高性能。对于短生命周期对象较多的应用，可适当增大新生代。
+
+#### 垃圾回收相关参数
+
+##### 选择垃圾回收器
+
+- 参数
+
+  ：不同的垃圾回收器有对应的启用参数。
+
+  - **Serial 垃圾回收器**：`-XX:+UseSerialGC`，适用于单线程环境和小内存应用。
+  - **Parallel 垃圾回收器**：`-XX:+UseParallelGC` 开启并行垃圾回收器，主要关注吞吐量；`-XX:+UseParallelOldGC` 用于老年代的并行回收。
+  - **CMS（Concurrent Mark Sweep）垃圾回收器**：`-XX:+UseConcMarkSweepGC`，以获取最短回收停顿时间为目标，适合对响应时间要求较高的应用。
+  - **G1（Garbage First）垃圾回收器**：`-XX:+UseG1GC`，适用于大内存、多处理器的场景，能很好地控制垃圾回收的停顿时间。
+
+- **示例**：`java -XX:+UseG1GC Main` 表示使用 G1 垃圾回收器运行 `Main` 类。
+
+##### 垃圾回收相关其他参数
+
+- **参数**：`-XX:MaxGCPauseMillis` 用于设置最大垃圾回收停顿时间；`-XX:GCTimeRatio` 用于设置垃圾回收时间与应用程序运行时间的比例。
+- **示例**：`-XX:MaxGCPauseMillis=200` 表示最大垃圾回收停顿时间不超过 200 毫秒；`-XX:GCTimeRatio=99` 表示垃圾回收时间占总时间的比例不超过 1%。
+- **作用**：通过这些参数可以对垃圾回收的性能进行更精细的控制。
+
+#### 栈内存相关参数
+
+##### 线程栈大小
+
+- **参数**：`-Xss` 用于设置每个线程的栈大小。
+- **示例**：`-Xss2m` 表示将每个线程的栈大小设置为 2MB。
+- **作用**：对于递归调用较多的应用，可适当增大栈大小；而对于创建大量线程的应用，可适当减小栈大小以避免内存溢出。
+
+#### 其他参数
+
+##### 类元数据空间大小
+
+- **参数**：`-XX:MetaspaceSize` 用于设置类元数据空间的初始大小；`-XX:MaxMetaspaceSize` 用于设置类元数据空间的最大大小。
+- **示例**：`-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m` 表示初始大小为 128MB，最大为 256MB。
+- **作用**：在 Java 8 及以后版本，类元数据存储在元空间，合理设置元空间大小可避免元空间溢出。
+
+打印垃圾回收日志
+
+- **参数**：`-XX:+PrintGCDetails` 用于打印详细的垃圾回收日志；`-XX:+PrintGCDateStamps` 用于打印垃圾回收的时间戳。
+- **示例**：`-XX:+PrintGCDetails -XX:+PrintGCDateStamps`
+- **作用**：通过分析垃圾回收日志，可以了解垃圾回收的频率、停顿时间等信息，为性能调优提供依据。
+
+
 
 **参考资料：**
 
