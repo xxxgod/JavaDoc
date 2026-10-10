@@ -7,7 +7,7 @@
 
 对于更多实践教程内容，会放在 [X-Dev技术守卫者]( http://dev.itqu.net/) 
 
-赠人玫瑰，手有余香，感谢捐赠 。 [捐赠入口](http://dev.itqu.net/xstore/donate/index.html)                                                
+赠人玫瑰，手有余香，感谢捐赠 。 [捐赠入口](http://dev.itqu.net/page/donate/index.html)                                                
 
 另加微信：（帮拉进群互动，互助内推和分享面经） 
 
